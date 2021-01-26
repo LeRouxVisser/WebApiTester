@@ -1,0 +1,31 @@
+{% extends "WebApp/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <div class="content-section">
+      <div class="media">
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">
+                    Update details
+                </legend>
+                {{ u_form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class = "btn btn-outline-info" type="submit">
+                    Update
+                </button>
+            </div>
+        </form>
+      <!-- FORM HERE -->
+    </div>
+    {% else %}
+    <h1>Home Page</h1>
+    {% endif %}
+{% endblock content %}

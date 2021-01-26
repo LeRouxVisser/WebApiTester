@@ -1,0 +1,9 @@
+from django.urls import path
+from . import views as v
+
+urlpatterns = [
+    path('', v.home, name='WebApp-home'),
+    path('about/', v.about, name='WebApp-about'),
+    path('spec/', v.spec, name='WebApp-spec'),
+    path('defects/', v.defects, name='WebApp-defects')
+]

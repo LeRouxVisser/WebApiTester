@@ -1,0 +1,37 @@
+.div[id$="-endpoint"]{
+    float: left;
+}
+
+.div[id$="-Intermittent_connection_issues"]{
+    float: right;
+}
+
+.link-formset{
+    border-bottom: 1px solid #dee2e6 !important;
+    margin-top: 10px;
+}
+
+.link-formset:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/*label[for$="-endpoint"]{
+    display: none;
+}*/
+label[for$="-Intermittent_connection_per"]{
+    display: none;
+}
+
+div[id$="-Intermittent_connection_per"]{
+    float: right;
+
+}
+
+div[id$="-Intermittent_connection_issues"]{
+    float: left;
+    position:absolute;
+}
+input[type="checkbox"] {
+  margin-top: 0.52%;
+}

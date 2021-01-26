@@ -1,0 +1,44 @@
+{% extends "WebApp/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
+
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">
+                Add endpoints and Json specs below:
+            </legend>
+            <div>
+                {{ formset.management_form }}
+                {% for info in formset %}
+                <div class="link-formset">
+                    {{ info|crispy }}
+                </div>
+
+                {% endfor %}
+
+          </div>
+        </fieldset>
+             <script>
+                $('.link-formset').formset({
+                    addText: '+',
+                    deleteText: '-',
+                    addCssClass: 'btn btn-outline add-row'
+                    })
+             </script>
+
+        <div class="form-group">
+
+        <button class = "btn btn-outline-info" type="submit">
+                submit
+        </button>
+        </div>
+    </form>
+  <!-- FORM HERE -->
+</div>
+{% endblock content %}
