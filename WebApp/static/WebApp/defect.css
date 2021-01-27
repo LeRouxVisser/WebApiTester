@@ -25,12 +25,14 @@ label[for$="-Intermittent_connection_per"]{
 
 div[id$="-Intermittent_connection_per"]{
     float: right;
+    width: 16%;
 
 }
 
 div[id$="-Intermittent_connection_issues"]{
     float: left;
     position:absolute;
+    width: 65%;
 }
 input[type="checkbox"] {
   margin-top: 0.52%;
