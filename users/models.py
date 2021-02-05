@@ -5,6 +5,12 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     endpoint = models.TextField(max_length=50, unique=True)
+    async_func = models.BooleanField(default=0)
+    async_result_url = models.URLField(default='https://uat.openapi.m-pesa.com/')
+    async_result_time_delay = models.IntegerField(validators=[
+            MaxValueValidator(120),
+            MinValueValidator(1)
+        ], default=10)
     json_spec = models.TextField(default="[[{},{},200]]")
     connection_down = models.BooleanField(default=0)
     Intermittent_connection_issues = models.BooleanField(default=0)

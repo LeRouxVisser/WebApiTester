@@ -89,7 +89,7 @@ a.article-title:hover {
 
 .form-check-label {
     clear: both;
-    margin-left: 10px;
+    margin-left: 0.5%;
 }
 
 .form-check-input {
@@ -135,3 +135,51 @@ a.article-title:hover {
 div[id$="-DELETE"] {
  display: none;
 }
+
+div[id$="-async_result_time_delay"]{
+    float: right;
+    width: 16%;
+
+}
+
+div[id$="-async_func"]{
+    float: left;
+    position:absolute;
+    width: 20%;
+}
+input[type="checkbox"] {
+  margin-top: 6%;
+}
+
+input[id$="-async_result_time_delay"] {
+    margin-top: -18.7%;
+}
+
+input#id_form-0-async_result_time_delay {
+    margin-top: -3.7%;
+}
+
+div[id$="-async_result_url"] {
+    width: 60%;
+    float: right;
+    clear: right;
+    margin-left: 0.5%;
+
+
+}
+input#id_form-0-async_result_url {
+    margin-top: -1%;
+}
+
+input[id$="-async_result_url"] {
+    margin-top: -5%;
+}
+
+div[id$="-async_result_time_delay"] {
+    float: right;
+    clear: left;
+    width: 16%;
+
+}
+
+
