@@ -34,6 +34,7 @@ div[id$="-Intermittent_connection_issues"]{
     position:absolute;
     width: 65%;
 }
+
 input[type="checkbox"] {
   margin-top: 0.52%;
 }
