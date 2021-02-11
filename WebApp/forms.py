@@ -1,6 +1,7 @@
 from django import forms
 import users.models as m
 import json
+import xml.dom.minidom as xdm
 
 class SpecsUpdateForm(forms.ModelForm):
     endpoint = forms.Field()
@@ -51,6 +52,30 @@ class DefectsUpdateForm(forms.ModelForm):
     endpoint = forms.Field(required=False, disabled="disabled")
     class Meta:
         model = m.Profile
-        fields = ['endpoint', 'connection_down', 'Intermittent_connection_issues','Intermittent_connection_per']
+        fields = ['endpoint', 'connection_down', 'Intermittent_connection_issues', 'Intermittent_connection_per']
 
 
+class TestApi(forms.Form):
+    api_type_choices = [('XML', 'XML'), ('JSON', 'JSON')]
+    api_request_type_choices = [('POST', 'POST'), ('PUT', 'PUT')]
+    api_url = forms.URLField(label='Url')
+    api_header = forms.JSONField(label='Header')
+    api_request_type = forms.ChoiceField(choices=api_type_choices, label='Request type')
+    api_type = forms.ChoiceField(choices=api_request_type_choices, label='Content type')
+    api_body = forms.CharField(widget=forms.Textarea, label='Body')
+
+    def clean_api_body(self):
+        api_request_type = self.cleaned_data['api_request_type']
+        api_body = self.cleaned_data['api_body']
+        if api_request_type == "JSON":
+            try:
+                json.loads(api_body)
+            except json.decoder.JSONDecodeError:
+                raise forms.ValidationError(
+                    '''Please enter a valid jason object list using " as quotations for keys and values and ' inside request and respond packets where quotes are needed''')
+        else:
+            try:
+                xdm.parseString(api_body)
+            except xdm.xml.parsers.expat.ExpatError:
+                raise forms.ValidationError(
+                    '''Please enter a valid xml packet''')

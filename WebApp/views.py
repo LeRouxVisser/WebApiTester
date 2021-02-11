@@ -2,13 +2,30 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import users.forms as f
-from .forms import SpecsUpdateForm, DefectsUpdateForm
+from numpy import format_parser
+
+from .forms import SpecsUpdateForm, DefectsUpdateForm, TestApi
 from django.forms import modelformset_factory
 import users.models as m
 import ReastfulApi.urls as r
 import ReastfulApi.views as v
 from django.urls import path
 import WebApiTester.urls as w
+import requests
+import json
+
+def sendRequest(request_url, request_type, body_type, request_body, request_header):
+    print(request_type)
+    # if body_type == "JSON":
+    #     header = {'Content-type': 'application/json'}
+    # else:
+    #     header = {'Content-type': 'application/xml'}
+    if request_type == "POST":
+        response = requests.post(url=request_url, headers=request_header, data=request_body)
+    else:
+        response = requests.put(url=request_url, headers=request_header, data=request_body)
+    print(request_header)
+    return response
 
 def home(request):
     if request.method == 'POST':
@@ -98,3 +115,26 @@ def defects(request):
     context['formset'] = formset
     return render(request, template_name, context)
 
+@login_required
+def testApi(request):
+    context = {}
+    template_name = 'WebApp/test_api.html'
+    if request.method == 'POST':
+        form = TestApi(request.POST)
+
+        if form.is_valid():
+            api_url = form.data['api_url']
+            api_request_type = form.data['api_request_type']
+            api_body_type = form.data['api_type']
+            api_body = form.data['api_body']
+            api_header = json.loads(form.data['api_header'])
+            print(api_header)
+            response = sendRequest(api_url, api_body_type, api_request_type, api_body, api_header)
+            print(response)
+            messages.success(request, 'request sent')
+        else:
+            messages.error(request, 'request not sent')
+    else:
+        form = TestApi()
+    context['form'] = form
+    return render(request, template_name, context)

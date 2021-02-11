@@ -1,0 +1,25 @@
+{% extends "WebApp/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+                <legend class="border-bottom mb-4">
+                Send out mock api request:
+                </legend>
+            <div>
+                <div class="link-formset">
+                    {{ form|crispy }}
+                </div>
+          </div>
+        </fieldset>
+        <div class="form-group">
+        <button class = "btn btn-outline-info" type="submit">
+                send
+        </button>
+        </div>
+    </form>
+  <!-- FORM HERE -->
+</div>
+{% endblock content %}
