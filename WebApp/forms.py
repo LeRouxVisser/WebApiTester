@@ -43,8 +43,7 @@ class SpecsUpdateForm(forms.ModelForm):
 
     def validator(self, pack, length):
         if len(pack) != length:
-            raise forms.ValidationError('Please make sure each list inside the jason object contains 3 elements one request packet, '
-                    'one response packet and a response status code')
+            raise forms.ValidationError(f'''Please make sure each list inside the jason object contains {length} elements.''')
         if not self.is_int(pack[2]):
             raise forms.ValidationError('Please specify a valid response status code')
 
