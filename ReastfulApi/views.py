@@ -75,7 +75,12 @@ def GetMockResponse(request):
     async_resp_time = m.Profile.objects.get(endpoint=path_striped).async_result_time_delay
     async_result_url = m.Profile.objects.get(endpoint=path_striped).async_result_url
     json_spec = json.loads(json_spec_str.replace('\r', '').replace('\t', '').replace('\n', ''))
-    request_type = request.META["CONTENT_TYPE"].split('/')[1]
+    print(request.META["CONTENT_TYPE"])
+    if (len(request.META["CONTENT_TYPE"].split('/')) == 2):
+        request_type = request.META["CONTENT_TYPE"].split('/')[1]
+    else:
+        request_type = None
+    print(request_type)
     api_c_d_response = '''  <!DOCTYPE html>
                                 <html lang="en">
                                 <head>
