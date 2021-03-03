@@ -53,6 +53,12 @@ class DefectsUpdateForm(forms.ModelForm):
         model = m.Profile
         fields = ['endpoint', 'connection_down', 'Intermittent_connection_issues', 'Intermittent_connection_per']
 
+class ProjectForm(forms.ModelForm):
+    project_name = forms.Field()
+    class Meta:
+        model = m.Project
+        fields = ['project_name']
+        labels = {'project_name': ''}
 
 class TestApi(forms.Form):
     api_type_choices = [('XML', 'XML'), ('JSON', 'JSON')]

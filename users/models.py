@@ -2,9 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+class Project(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project_name = models.TextField(max_length=50, default="")
+
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    endpoint = models.TextField(max_length=50, unique=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    endpoint = models.TextField(max_length=50)
     async_func = models.BooleanField(default=0)
     async_result_url = models.URLField(default='https://uat.openapi.m-pesa.com/')
     async_result_time_delay = models.IntegerField(validators=[

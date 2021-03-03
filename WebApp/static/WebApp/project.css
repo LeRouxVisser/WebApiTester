@@ -1,0 +1,35 @@
+label[for$="-project_name"]{
+    display: none;
+}
+
+.delete-row{
+    margin-bottom: 1%;
+    margin-top: -5px;
+}
+
+.add-row {
+    margin-top: -37px;
+}
+
+.mb-4, .my-4 {
+    margin-bottom: 2.4rem!important;
+}
+
+.Spec_button, .Defect_button{
+    text-align: center;
+    border: 1px solid;
+    padding: .4rem .75rem;
+    border-radius: .25rem;
+    text-decoration: none!important;
+    margin-left: 3px;
+    color: #808080;
+}
+
+.Spec_button:hover, .Defect_button:hover {
+  color: #FFFFFF;
+  background-color: #808080;
+}
+
+.link-formset{
+    margin-bottom: 0.5rem;
+}
