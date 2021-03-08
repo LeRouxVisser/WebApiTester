@@ -2,6 +2,13 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div>
+    {% if messages %}
+        {%for message in messages%}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
@@ -22,4 +29,40 @@
     </form>
   <!-- FORM HERE -->
 </div>
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>
+ $(function(){
+    $('#id_api_header').click(function prettyPrint(){
+        var ugly = document.getElementById('id_api_header').value;
+        var obj = JSON.parse(ugly);
+        var pretty = JSON.stringify(obj, undefined, 4);
+        document.getElementById('id_api_header').value = pretty;
+    })
+ })
+
+ window.onload = function prettyPrint(){
+        var ugly = document.getElementById('id_api_header').value;
+        console.log(ugly);
+        var obj = JSON.parse(ugly);
+        var pretty = JSON.stringify(obj, undefined, 4);
+        console.log(pretty)
+        document.getElementById('id_api_header').value = pretty;
+    }
+
+  $(function(){
+    $('#id_api_body').click(function prettyPrint(){
+        var header = JSON.parse(document.getElementById('id_api_header').value);
+        if (Object.keys(header).includes("Content-type")) {
+            if (header["Content-type"].toLowerCase().includes("json")){
+                var ugly = document.getElementById('id_api_body').value;
+                var obj = JSON.parse(ugly);
+                var pretty = JSON.stringify(obj, undefined, 4);
+                document.getElementById('id_api_body').value = pretty;
+            }
+        };
+
+    })
+ })
+</script>
 {% endblock content %}

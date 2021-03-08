@@ -11,6 +11,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
 
 <div>
+    {% if messages %}
+        {%for message in messages%}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
@@ -22,8 +29,9 @@
                 {% for info in formset %}
                 <div class="link-formset">
                     {{ info|crispy }}
-                        <a class="Spec_button" href="{% url 'WebApp-specs' %}?project={{ info.id.value }}">Specs</a>
-                        <a class="Defect_button" href="{% url 'WebApp-defects' %}?project={{ info.id.value }}">Defects</a>
+                        <a class="Project_button" href="{% url 'WebApp-specs' %}?project={{ info.id.value }}">Specs</a>
+                        <a class="Project_button" href="{% url 'WebApp-defects' %}?project={{ info.id.value }}">Defects</a>
+                        <a class="Project_button" href="{% url 'WebApp-results' %}?project={{ info.id.value }}">Results</a>
                 </div>
                 {% endfor %}
 

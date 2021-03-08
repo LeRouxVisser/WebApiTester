@@ -9,7 +9,7 @@ class Project(models.Model):
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    endpoint = models.TextField(max_length=50)
+    endpoint = models.TextField(max_length=50, unique=True)
     async_func = models.BooleanField(default=0)
     async_result_url = models.URLField(default='https://uat.openapi.m-pesa.com/')
     async_result_time_delay = models.IntegerField(validators=[
@@ -25,5 +25,13 @@ class Profile(models.Model):
         ], default=50)
     def __str__(self):
         return f'{self.user.username} Profile'
+    result = models.TextField(default="")
+    result_match = models.BooleanField(default=0)
+
+# class Results(models.Model):
+#     profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
+#         primary_key=True)
+#     endpoint = models.TextField(max_length=50, unique=True)
+#     result = models.TextField(default="")
 
 

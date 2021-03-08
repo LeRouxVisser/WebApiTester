@@ -1,49 +1,39 @@
 {% extends "WebApp/base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
-
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'WebApp/defect.css' %}">
+</head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
-
 <div>
-    {% if messages %}
-        {%for message in messages%}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    <form method="POST">
+    <form>
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">
-                Add endpoints and Json specs below:
+                Check last results received per endpoint:
             </legend>
             <div>
                 {{ formset.management_form }}
-                {% for info in formset %}
+                {% for message, info in formset%}
+<!--                {% if messages %}-->
+<!--                    {% for message in messages %}-->
+<!--                        {{ message}}-->
+<!--                    {% endfor %}-->
+<!--                {% endif %}-->
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
                 <div class="link-formset">
                     {{ info|crispy }}
                 </div>
+
                 {% endfor %}
 
           </div>
         </fieldset>
-             <script>
-                $('.link-formset').formset({
-                    addText: '+',
-                    deleteText: '-',
-                    addCssClass: 'btn btn-outline add-row'
-                    })
-             </script>
-
-        <div class="form-group">
-
-        <button class = "btn btn-outline-info" type="submit">
-                submit
-        </button>
-        </div>
     </form>
   <!-- FORM HERE -->
 </div>

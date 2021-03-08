@@ -2,9 +2,6 @@
     float: left;
 }
 
-.div[id$="-Intermittent_connection_issues"]{
-    float: right;
-}
 
 .link-formset{
     border-bottom: 1px solid #dee2e6 !important;
@@ -24,9 +21,10 @@ label[for$="-Intermittent_connection_per"]{
 }
 
 div[id$="-Intermittent_connection_per"]{
-    float: right;
+    display: inline-block;
     width: 16%;
-
+    margin-left: 84%;
+    margin-bottom: 0%;
 }
 
 div[id$="-Intermittent_connection_issues"]{

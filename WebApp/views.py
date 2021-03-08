@@ -4,7 +4,7 @@ from django.contrib import messages
 import users.forms as f
 from numpy import format_parser
 
-from .forms import SpecsUpdateForm, DefectsUpdateForm, TestApi, ProjectForm
+from .forms import SpecsUpdateForm, DefectsUpdateForm, TestApi, ProjectForm, ResultsForm
 from django.forms import modelformset_factory
 import users.models as m
 import ReastfulApi.urls as r
@@ -14,7 +14,7 @@ import WebApiTester.urls as w
 import requests
 import json
 
-def sendRequest(request_url, request_type, body_type, request_body, request_header):
+def sendRequest(request_url, request_type, request_body, request_header):
     print(request_type)
     # if body_type == "JSON":
     #     header = {'Content-type': 'application/json'}
@@ -93,11 +93,9 @@ def projects(request):
 def spec(request):
     # add error flag is None
     project_id = request.GET.get('project', '') if is_int(request.GET.get('project', '')) else -1
-    print(project_id)
     if project_id != -1:
         extras = 1 if len(m.Profile.objects.filter(user=request.user, project=project_id)) == 0 else 0
         project_val = m.Project.objects.get(id=project_id)
-        print(project_val)
         context ={}
         SpecsUpdateFormSet=modelformset_factory(m.Profile, form=SpecsUpdateForm,
                                                 extra=extras, can_delete=True)
@@ -126,7 +124,7 @@ def spec(request):
                 w.urlpatterns[3].url_patterns = r.urlpatterns
 
                 messages.success(request, f'Specs successfully updated for the {request.user} user')
-                return redirect('WebApp-home')
+                return redirect('WebApp-projects')
             else:
                 messages.error(request, f'Specs could not be updated for {request.user} user')
                 # print(formset.errors)
@@ -155,7 +153,7 @@ def defects(request):
             if formset.is_valid():
                 formset.save()
                 messages.success(request, f'Defects successfully updated for the {request.user} user')
-                return redirect('WebApp-home')
+                return redirect('WebApp-projects')
             else:
                 messages.error(request, f'Defects could not be updated for {request.user} user')
         else:
@@ -172,15 +170,15 @@ def testApi(request):
     template_name = 'WebApp/test_api.html'
     if request.method == 'POST':
         form = TestApi(request.POST)
-
+        print("Hello")
         if form.is_valid():
             api_url = form.data['api_url']
             api_request_type = form.data['api_request_type']
-            api_body_type = form.data['api_type']
+            # api_body_type = form.data['api_type']
             api_body = form.data['api_body']
             api_header = json.loads(form.data['api_header'])
             print(api_header)
-            response = sendRequest(api_url, api_body_type, api_request_type, api_body, api_header)
+            response = sendRequest(api_url, api_request_type, api_body, api_header)
             print(response)
             messages.success(request, 'request sent')
         else:
@@ -188,4 +186,32 @@ def testApi(request):
     else:
         form = TestApi()
     context['form'] = form
+    return render(request, template_name, context)
+
+@login_required
+def results(request):
+    project_id = request.GET.get('project', '') if is_int(request.GET.get('project', '')) else -1
+    print(project_id)
+    if project_id != -1:
+        profile_num_packets = len(m.Profile.objects.filter(user=request.user, project=project_id))
+        extras = 1 if profile_num_packets == 0 else 0
+        context = {}
+        template_name = 'WebApp/results.html'
+        for i in range(profile_num_packets):
+            if (m.Profile.objects.filter(user=22, project=24).values()[i]["result_match"]):
+                messages.add_message(request, 25, "Request matches specs mapped")
+                # messages.success(request, "Request matches specs mapped")
+            else:
+                messages.add_message(request, 40, "Request does not matches specs mapped")
+                # messages.error(request, "Request does not matches specs mapped")
+        ResultsFormSet=modelformset_factory(m.Profile, form=ResultsForm,
+                                                extra=extras, can_delete=True)
+        formset = ResultsFormSet(queryset=m.Profile.objects.filter(
+                                            user=request.user, project=project_id))
+        storage = messages.get_messages(request)
+        formset = zip(storage, formset)
+        context['formset'] = formset
+    else:
+        messages.error(request, f'This project has not yet been created')
+        return redirect('WebApp-projects')
     return render(request, template_name, context)
