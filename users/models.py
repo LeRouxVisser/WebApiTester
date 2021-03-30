@@ -8,7 +8,7 @@ class Project(models.Model):
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     endpoint = models.TextField(max_length=50, unique=True)
     async_func = models.BooleanField(default=0)
     async_result_url = models.URLField(default='https://uat.openapi.m-pesa.com/')

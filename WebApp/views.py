@@ -81,6 +81,7 @@ def projects(request):
                 for i in range(len(project)):
                     project[i].user = request.user
             formset.save()
+            # m.Profile.objects.filter(project__isnull=True).delete()
             messages.success(request, f'Project successfully updated for the {request.user} user')
             return redirect('WebApp-home')
         else:
