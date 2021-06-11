@@ -10,7 +10,7 @@ import users.models as m
 import ReastfulApi.urls as r
 import ReastfulApi.views as v
 from django.urls import path
-import WebApiTester.urls as w
+from WebApiTester import urls as w
 import requests
 import json
 
@@ -199,7 +199,7 @@ def results(request):
         context = {}
         template_name = 'WebApp/results.html'
         for i in range(profile_num_packets):
-            if (m.Profile.objects.filter(user=22, project=24).values()[i]["result_match"]):
+            if (m.Profile.objects.filter(user=request.user, project=project_id).values()[i]["result_match"]):
                 messages.add_message(request, 25, "Request matches specs mapped")
                 # messages.success(request, "Request matches specs mapped")
             else:

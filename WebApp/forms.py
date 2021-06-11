@@ -39,7 +39,7 @@ class SpecsUpdateForm(forms.ModelForm):
             int(s)
             check = True
             return check
-        except ValueError:
+        except (TypeError, ValueError):
             return check
 
     def validator(self, pack, length):
