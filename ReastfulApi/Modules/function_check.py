@@ -1,4 +1,5 @@
 import xml.dom.minidom as xdm
+
 def CheckType(packet):
     packet_type = None
     if (isinstance(packet, dict)):
