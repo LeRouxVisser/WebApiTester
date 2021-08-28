@@ -7,23 +7,13 @@ import xml.dom.minidom as xdm
 import time
 import threading
 import requests
-
-def CheckType(packet):
-    packet_type = None
-    if (isinstance(packet, dict)):
-        packet_type = 'json'
-    else:
-        try:
-            xdm.parseString(packet)
-            packet_type = 'xml'
-        except xdm.xml.parsers.expat.ExpatError:
-            pass
-    return packet_type
+import ReastfulApi.modules.dynamic_mapper as dm
+import ReastfulApi.modules.function_check as fc
 
 
 def AsyncCall(result_url, sleep_time, result_response):
     time.sleep(sleep_time)
-    result_response_type = CheckType(result_response)
+    result_response_type = fc.CheckType(result_response)
     if result_response_type == "json":
         result_header = {'Content-type': 'application/json'}
     elif result_response_type == "xml":
@@ -106,20 +96,27 @@ def GetMockResponse(request):
     profile_obj.result_match = 0
     mapped_request = ""
     for pack in json_spec:
-        print(mapped_request)
-        print(request_body)
+        original_mapped_request = str(pack[0])
+        if async_bool:
+            check_match, dynamic_request, dynamic_response, dynamic_async_response = dm.Main(request_body, pack[0], pack[1], pack[3])
+        else:
+            check_match, dynamic_request, dynamic_response, dynamic_async_response = dm.Main(request_body, pack[0], pack[1])
+        print(check_match)
+        print(dynamic_response)
         if mapped_request != str(request_body):
             mapped_request = mapped_request + str(pack[0]) + ("." if (pack == json_spec[len(json_spec) -1]) else ",\n")
         else:
             mapped_request = mapped_request + "."
-        if pack[0] == request_body:
-            mapped_request = str(pack[0])
+        if (check_match):
+            mapped_request = original_mapped_request
             profile_obj.result_match = 1
-            api_response = pack[1]
+            api_response = dynamic_response
             api_response_status = pack[2]
-            api_response_type = CheckType(api_response)
+            api_response_type = fc.CheckType(api_response)
             if async_bool:
-                result_response = pack[3]
+                result_response = dynamic_async_response
+    # print(str(pack[0]))
+    # print(profile_obj.result + mapped_request)
     profile_obj.result = profile_obj.result + mapped_request
     profile_obj.save()
 
