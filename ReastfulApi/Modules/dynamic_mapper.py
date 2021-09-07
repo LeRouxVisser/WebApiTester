@@ -52,6 +52,8 @@ def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_r
         check_match = (soup_request_mapped == soup_request)
     except AttributeError:
         print('Tag not in request/response')
+    print(soup_request_mapped)
+    print(soup_request)
     print(check_match)
     if (check_match):
         try:
@@ -143,66 +145,8 @@ if __name__ == '__main__':
         "input_ResponseTransactionStatus": None
 }
 
-    xml_request = '''
-    <soapenv:Envelope 
-    xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'
-    xmlns:api='http://cps.huawei.com/cpsinterface/api_requestmgr' 
-    xmlns:com='http://cps.huawei.com/cpsinterface/common'
-    xmlns:req='http://cps.huawei.com/cpsinterface/request'>
-       <soapenv:Header />
-       <soapenv:Body>
-          <api:Request>
-             <req:Header>
-                <req:Version>1.0</req:Version>
-                <req:CommandID>TEST_MOCK_G2</req:CommandID>
-                <req:OriginatorConversationID>2</req:OriginatorConversationID>
-                <req:Caller>
-                   <req:CallerType>2</req:CallerType>
-                   <req:ThirdPartyID>12</req:ThirdPartyID>
-                   <req:Password>=dsmoedmowsedf</req:Password>
-                   <req:ResultURL>https://www.google.com</req:ResultURL>
-                </req:Caller>
-                <req:KeyOwner>1</req:KeyOwner>
-                <req:Timestamp>12</req:Timestamp>
-             </req:Header>
-             <req:Body>
-                <req:Identity>
-                   <req:Initiator>
-                      <req:IdentifierType>1</req:IdentifierType>
-                      <req:Identifier>sdsfd</req:Identifier>
-                      <req:SecurityCredential>grfdfg</req:SecurityCredential>
-                   </req:Initiator>
-                   <req:ReceiverParty>
-                      <req:IdentifierType>4</req:IdentifierType>
-                      <req:Identifier>dfgc</req:Identifier>
-                   </req:ReceiverParty>
-                </req:Identity>
-                <req:TransactionRequest>
-                   <req:Parameters>
-                      <req:Parameter>
-                         <com:Key>BillReferenceNumber</com:Key>
-                         <com:Value>234erf</com:Value>
-                      </req:Parameter>
-                      <req:Amount>340</req:Amount>
-                      <req:Currency>LSL</req:Currency>
-                   </req:Parameters>
-                </req:TransactionRequest>
-             </req:Body>
-          </api:Request>
-       </soapenv:Body>
-    </soapenv:Envelope>
-    '''
-    xml_request_mapped = '''
-    <soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:api='http://cps.huawei.com/cpsinterface/api_requestmgr' xmlns:com='http://cps.huawei.com/cpsinterface/common' xmlns:req='http://cps.huawei.com/cpsinterfa
-ce/request'>       <soapenv:Header/>       <soapenv:Body>          <api:Request>             <req:Header>                <req:Version>1.0</req:Version>                <req:CommandID>TEST_MOCK_G2</req:CommandID>                <req:Orig
-inatorConversationID>?1</req:OriginatorConversationID>                <req:Caller>                   <req:CallerType>?1</req:CallerType>                   <req:ThirdPartyID>?2</req:ThirdPartyID>                   <req:Password>=dsmoedm
-owsedf</req:Password>                   <req:ResultURL>https://www.google.com</req:ResultURL>                </req:Caller>                <req:KeyOwner>1</req:KeyOwner>                <req:Timestamp>12</req:Timestamp>             </req
-:Header>             <req:Body>                <req:Identity>                   <req:Initiator>                      <req:IdentifierType>1</req:IdentifierType>                      <req:Identifier>sdsfd</req:Identifier>
-      <req:SecurityCredential>grfdfg</req:SecurityCredential>                   </req:Initiator>                   <req:ReceiverParty>                      <req:IdentifierType>4</req:IdentifierType>                      <req:Identifier
->dfgc</req:Identifier>                   </req:ReceiverParty>                </req:Identity>                <req:TransactionRequest>                   <req:Parameters>                      <req:Parameter>                         <com:K
-ey>BillReferenceNumber</com:Key>                         <com:Value>234erf</com:Value>                      </req:Parameter>                      <req:Amount>340</req:Amount>                      <req:Currency>LSL</req:Currency>
-            </req:Parameters>                </req:TransactionRequest>             </req:Body>          </api:Request>       </soapenv:Body>    </soapenv:Envelope>
-    '''
+    xml_request = '''<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:pin='http://pinbucket.truteq.com/'><soapenv:Header/><soapenv:Body><pin:SendPushInfo><msisdn>233508729417</msisdn><ref>dace8553e3f146d007fdbd8ad1febb56</ref><message>Do you want to Pay GHS100.0 to Topzone? Enter M-Pesa PIN to confirm:</message><code>*135*27#*4~1~12345~100.0</code><amount>100.0</amount><response></response><url>http://192.168.21.152:8445/UssdHandler/USSDSANDBOXOPENAPI25030/</url><validinput>The request was submitted successfully</validinput></pin:SendPushInfo></soapenv:Body></soapenv:Envelope>'''
+    xml_request_mapped = '''<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:pin='http://pinbucket.truteq.com/'><soapenv:Header/><soapenv:Body><pin:SendPushInfo><msisdn>?1</msisdn><ref>dace8553e3f146d007fdbd8ad1febb56</ref><message>Do you want to Pay GHS100.0 to Topzone? Enter M-Pesa PIN to confirm:</message><code>*135*27#*4~1~12345~100.0</code><amount>100.0</amount><response></response><url>http://192.168.21.152:8445/UssdHandler/USSDSANDBOXOPENAPI25030/</url><validinput>The request was submitted successfully</validinput></pin:SendPushInfo></soapenv:Body></soapenv:Envelope>'''
     xml_response_mapped = '''
     <?xml version="1.0" ?>
     <soapenv:Envelope

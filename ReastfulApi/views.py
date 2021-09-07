@@ -15,9 +15,9 @@ def AsyncCall(result_url, sleep_time, result_response):
     time.sleep(sleep_time)
     result_response_type = fc.CheckType(result_response)
     if result_response_type == "json":
-        result_header = {'Content-type': 'application/json'}
+        result_header = {'Content-Type': 'application/json'}
     elif result_response_type == "xml":
-        result_header = {'Content-type': 'application/xml'}
+        result_header = {'Content-Type': 'application/xml'}
     else:
         result_header = None
     print(result_header)
