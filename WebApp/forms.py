@@ -16,6 +16,9 @@ class SpecsUpdateForm(forms.ModelForm):
         }
 
     def clean_json_spec(self):
+        """
+            Function is used to validate that the json spec submitted format and syntax is correct.
+        """
         async_func = self.cleaned_data['async_func']
         json_spec = self.cleaned_data['json_spec']
         try:
@@ -33,6 +36,9 @@ class SpecsUpdateForm(forms.ModelForm):
         return json_spec
 
     def is_int(self, s):
+        """
+            Function is used to check if a variable is of type int.
+        """
         check = False
         try:
             int(s)
@@ -42,14 +48,13 @@ class SpecsUpdateForm(forms.ModelForm):
             return check
 
     def validator(self, pack, length):
+        """
+            Function is used to validate if the right amount of elements are specified in nested list.
+        """
         if len(pack) != length:
             raise forms.ValidationError(f'''Please make sure each list inside the jason object contains {length} elements.''')
         if not self.is_int(pack[2]):
             raise forms.ValidationError('Please specify a valid response status code')
-
-    # def clean_endpoint(self):
-    #     endpoint = self.cleaned_data['endpoint']
-        # print(endpoint)
 
 class DefectsUpdateForm(forms.ModelForm):
     endpoint = forms.Field(required=False, disabled="disabled")
@@ -83,6 +88,9 @@ class TestApi(forms.Form):
     api_body = forms.CharField(widget=forms.Textarea, label='Body')
 
     def clean_api_header(self):
+        """
+            Function is used to validate that the json header input format and syntax is correct.
+        """
         api_header = self.cleaned_data['api_header']
         try:
             api_header["Content-type"]
@@ -91,6 +99,10 @@ class TestApi(forms.Form):
                 '''Please give a Content-type tag''')
 
     def clean_api_body(self):
+        """
+            Function is used to validate that the body input format and syntax is correct.
+            Given what Content-type was specified in the header.
+        """
         api_header = self['api_header']
         html_string = str(api_header).replace('&quot;', '"')
         api_header_clean = json.loads(html_string[html_string.index("{"):html_string.index("}")+1])
