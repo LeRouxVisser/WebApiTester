@@ -9,7 +9,7 @@
                         Introduction
                     </h3>
                     <div class="get-started-info-content">
-                        Welcome to the 3rd party Mock system! The Solution offers creation of projects that make use of RESTful interfaces to help you mock current integrated systems of the OpenAPI system. These interfaces enable engineers and developers to continue with their work when these systems are not available or existing yet. Examples of systems that can be mocked:
+                        Welcome to the 3rd party Mock system! The Solution offers creation of projects that make use of RESTful APIs to help you mock any integrable systems. These APIs enable engineers and developers to continue with their work when these systems are not available of existing yet. Examples of systems that can be mocked:
                         <ul class="get-started-info-content">
                           <li>G2</li>
                           <li>USSD Push</li>
@@ -29,13 +29,13 @@
                         Access the spec page by clicking on the spec button under your created project. The spec page consists of a form with multiple inputs namely: <br>
                         <ul class="get-started-info-content">
                           <li> <b>Endpoint &#8594; </b> Specify the endpoint that will be used to send mock requests to. This endpoint will get additional info added to it namely the /user_id/project_id/.</li>
-                          <li> <b>Async button &#8594;</b> Click on the async button if you want to mock an async request. You will need to specify some additional information in the form after activating the async functionality. The result URL, time before results is sent to URL and lastly the async result body in the json spec section.</li>
-                          <li> <b>Json spec &#8594;</b> consists of a json nested array that contains a list with combination of requests, responses, response http status codes and lastly an async results if the async functionality is activated, otherwise it will only take 3 entries. Use &quot;?&quot; to add dynamic variable mapping from the request that came in on the endpoint right through the spec.</li>
+                          <li> <b>Async button &#8594;</b> Click on the async button if you want to mock an async request. You will need to specify some additional information in the form after activating the async functionality. The result URL (will be the URL the async result is sent to), time before results is sent to URL and lastly the async result body in the json spec section.</li>
+                          <li> <b>Json spec &#8594;</b> consists of a json nested array that contains a list with combination of requests, responses, response http status codes and lastly an async result if the async functionality is activated, otherwise it will only take 3 entries. Use &quot;?&quot; to add dynamic variable mapping from the request that came in on the endpoint right through the spec.</li>
                         </ul>
-                        The response sent to the endpoint will be linked to the mapped requests. The matching response, response http status code and async result response (if async functionality is active) will be used to respond to the request.<br><br>
+                        The request sent to the endpoint will be linked to the mapped requests. The matching response, response http status code and async result (if async functionality is active) will be used to respond to the request.<br><br>
                         Please see example of spec mapped below for a json request, making use of dynamic variables. The same concept will be applied for xml or xml and json mixed request and response mappings.<br><br>
                         <div class="code-section">
-                            <div class="code-section-header-top">request received</div>
+                            <div class="code-section-header-top">Request example received</div>
                             {<br>
     "input_Amount": "0.36",<br>
     "input_Country": "GHA",<br>
@@ -46,8 +46,37 @@
     "input_TransactionReference": "cpt80960034356",<br>
     "input_PurchasedItemsDesc": "Shoes"<br>
 }<br><br>
-                            <div class="code-section-header">request mapped</div>
-                            [[{<br>
+                            <div class="code-section-header">Logic mapping</div>
+[[<br>
+    (USE_CASE_1)<br>
+    (REQUEST_MAP),<br>
+    (RESPONSE_MAP),<br>
+    (HTTP_RESPONSE_CODE),<br>
+    (ASYNC_RESULT_MAP) &#8594; only if async functionality is active<br>
+  ],<br>
+  [<br>
+    (USE_CASE_2)<br>
+    (REQUEST_MAP),<br>
+    (RESPONSE_MAP),<br>
+    (HTTP_RESPONSE_CODE),<br>
+    (ASYNC_RESULT_MAP) &#8594; only if async functionality is active<br>
+  ],<br>
+  [<br>
+    (USE_CASE_3)<br>
+    (REQUEST_MAP),<br>
+    (RESPONSE_MAP),<br>
+    (HTTP_RESPONSE_CODE),<br>
+    (ASYNC_RESULT_MAP) &#8594; only if async functionality is active<br>
+  ],<br>
+  [<br>
+    (USE_CASE_4)<br>
+    (REQUEST_MAP),<br>
+    (RESPONSE_MAP),<br>
+    (HTTP_RESPONSE_CODE),<br>
+    (ASYNC_RESULT_MAP) &#8594; only if async functionality is active<br>
+  ]]<br><br>
+                            <div class="code-section-header">Example mapping</div>
+                            [[{<i>(Case 1: Async dynamic mapping)</i><br>
         "input_Amount": "0.36",<br>
         "input_Country": "GHA",<br>
         "input_Currency": "GHS",<br>
@@ -69,7 +98,29 @@
         "input_ResultDesc": "resultMain.res:ResultDesc",<br>
         "input_ThirdPartyConversationID": "?2",<br>
         "input_ResponseTransactionStatus": "Null"<br>
-}],[{<br>
+}],[{<i>(Case 2: Async hardcoded mapping)</i><br>
+        "input_Amount": "0.36",<br>
+        "input_Country": "GHA",<br>
+        "input_Currency": "GHS",<br>
+        "input_PrimaryPartyCode": "151516",<br>
+        "input_ReceiverPartyCode": "2",<br>
+        "input_ThirdPartyConversationID": "8",<br>
+        "input_TransactionReference": "cpt80960034356",<br>
+        "input_PurchasedItemsDesc": "Shoes"<br>
+    },{<br>
+        "output_ResponseCode": "INS-0",<br>
+        "output_ResponseDesc": "Failed",<br>
+        "output_TransactionID": "2",<br>
+        "output_ConversationID": "8",<br>
+        "output_ThirdPartyConversationID": "8"<br>
+    },200,{<br>
+        "input_OriginalConversationID": "5b28bbba9e7a420d93b47813d11ba080",<br>
+        "input_TransactionID": "2",<br>
+        "input_ResultCode": "2",<br>
+        "input_ResultDesc": "resultMain.res:ResultDesc",<br>
+        "input_ThirdPartyConversationID": "8",<br>
+        "input_ResponseTransactionStatus": "Null"<br>
+}],[{<i>(Case 3: Sync dynamic mapping)</i><br>
         "input_Amount": "0.36",<br>
         "input_Country": "GHA",<br>
         "input_Currency": "GHS",<br>
@@ -82,17 +133,27 @@
         "output_ResponseCode": "INS-0",<br>
         "output_ResponseDesc": "Failed",<br>
         "output_TransactionID": "?1",<br>
-        "output_ConversationID": "?2",<br>
+        "output_ConversationID": "?1",<br>
         "output_ThirdPartyConversationID": "?2"<br>
-    },200,{<br>
-        "input_OriginalConversationID": "5b28bbba9e7a420d93b47813d11ba080",<br>
-        "input_TransactionID": "?1",<br>
-        "input_ResultCode": "?1",<br>
-        "input_ResultDesc": "resultMain.res:ResultDesc",<br>
-        "input_ThirdPartyConversationID": "?2",<br>
-        "input_ResponseTransactionStatus": "Null"<br>
-}]]<br><br>
-                            <div class="code-section-header">response sent</div>
+    },200<br>
+                            ],[{<i>(Case 4: Sync hardcoded mapping)</i><br>
+        "input_Amount": "0.36",<br>
+        "input_Country": "GHA",<br>
+        "input_Currency": "GHS",<br>
+        "input_PrimaryPartyCode": "151516",<br>
+        "input_ReceiverPartyCode": "2",<br>
+        "input_ThirdPartyConversationID": "8",<br>
+        "input_TransactionReference": "cpt80960034356",<br>
+        "input_PurchasedItemsDesc": "Shoes"<br>
+    },{<br>
+        "output_ResponseCode": "INS-0",<br>
+        "output_ResponseDesc": "Failed",<br>
+        "output_TransactionID": "2",<br>
+        "output_ConversationID": "2",<br>
+        "output_ThirdPartyConversationID": "8"<br>
+    },200<br>
+                            ]]<br><br>
+                            <div class="code-section-header">Response example sent</div>
                             {<br>
         "output_ResponseCode": "INS-0",<br>
         "output_ResponseDesc": "Failed",<br>
@@ -100,7 +161,7 @@
         "output_ConversationID": "18",<br>
         "output_ThirdPartyConversationID": 18"<br>
     }<br><br>
-                            <div class="code-section-header">result sent</div>
+                            <div class="code-section-header">Result example sent</div>
                             {<br>
         "input_OriginalConversationID": "5b28bbba9e7a420d93b47813d11ba080",<br>
         "input_TransactionID": "13",<br>
@@ -115,7 +176,7 @@
                         Checking results on endpoints
                     </h3>
                     <div class="get-started-info-content">
-                        Access the Results page by clicking on the Results button under your created project. The Results page consists of the following information of the most resent request sent to a given endpoint:
+                        Access the Results page by clicking on the Results button under your created project. The Results page consists of the following information of the most recent request sent to a given endpoint:
                         <ul class="get-started-info-content">
                           <li> A status banner</li>
                             <ul class="get-started-info-content">

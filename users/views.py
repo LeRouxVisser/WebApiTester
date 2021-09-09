@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm
 
 def register(request):
+    """
+        Function is used to store new users credentials in DB after registration.
+        Function will also send back a message if registration was successful.
+    """
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -13,11 +17,8 @@ def register(request):
             messages.success(request, f'{username} your account has now successfully been created. You will now be able to log into the site!')
             return redirect('WebApp-login')
         else:
-            print('hello')
+            print('register form not valid')
 
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
-
-# def profile(request):
-#     return render(request, 'users/home.html')

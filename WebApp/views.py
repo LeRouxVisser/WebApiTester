@@ -15,7 +15,9 @@ import requests
 import json
 
 def sendRequest(request_url, request_type, request_body, request_header):
-    print(request_type)
+    """
+        Function is used to send request sent from the Request page.
+    """
     # if body_type == "JSON":
     #     header = {'Content-type': 'application/json'}
     # else:
@@ -24,49 +26,37 @@ def sendRequest(request_url, request_type, request_body, request_header):
         response = requests.post(url=request_url, headers=request_header, data=request_body)
     else:
         response = requests.put(url=request_url, headers=request_header, data=request_body)
-    print(request_header)
     return response
 
 def is_int(s):
-        check = False
-        try:
-            int(s)
-            check = True
-            return check
-        except ValueError:
-            return check
+    """
+        Function is used to check if a variable is of type int.
+    """
+    check = False
+    try:
+        int(s)
+        check = True
+        return check
+    except ValueError:
+        return check
 
 def home(request):
-    if request.method == 'POST':
-        u_form = f.UserUpdateForm(request.POST
-                                  , instance=request.user)
-        if u_form.is_valid():
-            u_form.save()
-            messages.success(request, f'{request.user} information updated successfully')
-            return redirect('WebApp-home')
-
-        else:
-            messages.error(request, f'{request.user} information could not be updated')
-
-    else:
-        # print(str(request.user) == 'AnonymousUser')
-        if str(request.user) == 'AnonymousUser':
-            u_form = f.UserUpdateForm()
-        else:
-            u_form = f.UserUpdateForm(instance=request.user)
-
+    """
+        Function is used to render the home page.
+    """
+    u_form = f.UserUpdateForm(instance=request.user)
     context = {
         'u_form': u_form
     }
 
     return render(request, 'WebApp/home.html', context)
 
-def about(request):
-    print(request.path)
-    return render(request, 'WebApp/about.html')
-
 @login_required
 def projects(request):
+    """
+        Function will only execute if user is logged in.
+        Function will pull up all the users projects and render the screen Project screen.
+    """
     context = {}
     # extras = 1 if len(m.Project.objects.filter(user=request.user)) == 0 else 0
     ProjectFormSet = modelformset_factory(m.Project, form=ProjectForm,
@@ -92,6 +82,11 @@ def projects(request):
     return render(request, template_name, context)
 @login_required
 def spec(request):
+    """
+        Function will only execute if user is logged in.
+        Function will pull up all the users specs bound to parent project
+        and render the Spec screen accordingly.
+    """
     # add error flag is None
     project_id = request.GET.get('project', '') if is_int(request.GET.get('project', '')) else -1
     if project_id != -1:
@@ -107,7 +102,6 @@ def spec(request):
             if formset.is_valid():
                 profile = formset.save(commit=False)
                 if len(profile) != 0:
-                    print(profile[0].id)
                     for i in range(len(profile)):
                         profile[i].user = request.user
                         profile[i].project = project_val
@@ -140,8 +134,12 @@ def spec(request):
 
 @login_required
 def defects(request):
+    """
+        Function will only execute if user is logged in.
+        Function will pull up all the users defects bound to parent project
+        and render the Defects screen accordingly.
+    """
     project_id = request.GET.get('project', '') if is_int(request.GET.get('project', '')) else -1
-    print(project_id)
     if project_id != -1:
         extras = 1 if len(m.Profile.objects.filter(user=request.user, project=project_id)) == 0 else 0
         context = {}
@@ -167,20 +165,21 @@ def defects(request):
 
 @login_required
 def testApi(request):
+    """
+        Function will only execute if user is logged in.
+        Function will render the Request screen.
+    """
     context = {}
     template_name = 'WebApp/test_api.html'
     if request.method == 'POST':
         form = TestApi(request.POST)
-        print("Hello")
         if form.is_valid():
             api_url = form.data['api_url']
             api_request_type = form.data['api_request_type']
             # api_body_type = form.data['api_type']
             api_body = form.data['api_body']
             api_header = json.loads(form.data['api_header'])
-            print(api_header)
             response = sendRequest(api_url, api_request_type, api_body, api_header)
-            print(response)
             messages.success(request, 'request sent')
         else:
             messages.error(request, 'request not sent')
@@ -191,8 +190,12 @@ def testApi(request):
 
 @login_required
 def results(request):
+    """
+        Function will only execute if user is logged in.
+        Function will pull up the latest results for the users given parent project
+        and render the Result screen accordingly.
+    """
     project_id = request.GET.get('project', '') if is_int(request.GET.get('project', '')) else -1
-    print(project_id)
     if project_id != -1:
         profile_num_packets = len(m.Profile.objects.filter(user=request.user, project=project_id))
         extras = 1 if profile_num_packets == 0 else 0

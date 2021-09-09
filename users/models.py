@@ -28,10 +28,5 @@ class Profile(models.Model):
     result = models.TextField(default="")
     result_match = models.BooleanField(default=0)
 
-# class Results(models.Model):
-#     profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
-#         primary_key=True)
-#     endpoint = models.TextField(max_length=50, unique=True)
-#     result = models.TextField(default="")
 
 

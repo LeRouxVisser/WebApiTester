@@ -12,6 +12,10 @@ import ReastfulApi.modules.function_check as fc
 
 
 def AsyncCall(result_url, sleep_time, result_response):
+    """
+        Function is used to perform async result request and will determine
+        if the request should be of type xml or json
+    """
     time.sleep(sleep_time)
     result_response_type = fc.CheckType(result_response)
     if result_response_type == "json":
@@ -20,13 +24,15 @@ def AsyncCall(result_url, sleep_time, result_response):
         result_header = {'Content-Type': 'application/xml'}
     else:
         result_header = None
-    print(result_header)
-    response = requests.post(url=result_url, data=result_response, headers=result_header)
-    print(result_response)
-    print(response)
+    requests.post(url=result_url, data=result_response, headers=result_header)
+
 
 def GetResponse(response, response_status, response_type,
                    async_bool, async_resp_time, async_result_url, result_response):
+    """
+        Function is used to determine what type of response to send back to user.
+        Function will also trigger the async functionality when activated on the spec page.
+    """
     if len(response) != 0:
         if async_bool:
             t1 = threading.Thread(target=AsyncCall, args=[async_result_url, async_resp_time, result_response])
@@ -49,6 +55,11 @@ def GetResponse(response, response_status, response_type,
 
 @api_view(["POST"])
 def GetMockResponse(request):
+    """
+        Function is used to lookup responses, using the sent request on the mapped spec stored on the DB.
+        Function will also save the results, if matched only the matched mapped request and if not matched
+        all the mapped request separated with a comma.
+    """
     api_response = {}
     api_response_status = 404
     result_response = None
@@ -60,18 +71,14 @@ def GetMockResponse(request):
     i_c_i_bool = profile_obj.Intermittent_connection_issues
     i_c_per = (profile_obj.Intermittent_connection_per)/100
     i_c_i_chance = r.random()
-    print(i_c_i_chance)
-    print(i_c_per)
     async_bool = profile_obj.async_func
     async_resp_time = profile_obj.async_result_time_delay
     async_result_url = profile_obj.async_result_url
     json_spec = json.loads(json_spec_str.replace('\r', '').replace('\t', '').replace('\n', ''))
-    print(request.META["CONTENT_TYPE"])
     if (len(request.META["CONTENT_TYPE"].split('/')) == 2):
         request_type = request.META["CONTENT_TYPE"].split('/')[1]
     else:
         request_type = None
-    print(request_type)
     api_c_d_response = '''  <!DOCTYPE html>
                                 <html lang="en">
                                 <head>
@@ -101,8 +108,6 @@ def GetMockResponse(request):
             check_match, dynamic_request, dynamic_response, dynamic_async_response = dm.Main(request_body, pack[0], pack[1], pack[3])
         else:
             check_match, dynamic_request, dynamic_response, dynamic_async_response = dm.Main(request_body, pack[0], pack[1])
-        print(check_match)
-        print(dynamic_response)
         if mapped_request != str(request_body):
             mapped_request = mapped_request + str(pack[0]) + ("." if (pack == json_spec[len(json_spec) -1]) else ",\n")
         else:
@@ -115,8 +120,6 @@ def GetMockResponse(request):
             api_response_type = fc.CheckType(api_response)
             if async_bool:
                 result_response = dynamic_async_response
-    # print(str(pack[0]))
-    # print(profile_obj.result + mapped_request)
     profile_obj.result = profile_obj.result + mapped_request
     profile_obj.save()
 

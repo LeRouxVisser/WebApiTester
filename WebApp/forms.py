@@ -18,7 +18,6 @@ class SpecsUpdateForm(forms.ModelForm):
     def clean_json_spec(self):
         async_func = self.cleaned_data['async_func']
         json_spec = self.cleaned_data['json_spec']
-        print(async_func)
         try:
             # print(json_spec)
             json_spec_check = json.loads(json_spec.replace('\r', '').replace('\t', '').replace('\n', ''))
@@ -95,7 +94,6 @@ class TestApi(forms.Form):
         api_header = self['api_header']
         html_string = str(api_header).replace('&quot;', '"')
         api_header_clean = json.loads(html_string[html_string.index("{"):html_string.index("}")+1])
-        print(type(api_header_clean))
         api_body = self.cleaned_data['api_body']
         if "Content-type" in api_header_clean.keys():
             if "json" in api_header_clean["Content-type"].lower():
