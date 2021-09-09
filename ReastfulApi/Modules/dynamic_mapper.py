@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 import ReastfulApi.modules.function_check as fc
 def Main(request,request_mapped=None,response_mapp=None,async_response_mapp=None):
+    """
+        Function will determine how to replace dynamic variables, parsing request to json or xml and then
+        extracting the values accordingly
+    """
     request_type_check = fc.CheckType(request)
     if request_type_check == 'xml':
         check_match, dynamic_request, dynamic_response, dynamic_async_response = DynamicXml(request, request_mapped, response_mapp, async_response_mapp)
@@ -17,6 +21,10 @@ def Main(request,request_mapped=None,response_mapp=None,async_response_mapp=None
 
 
 def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_response_mapp):
+    """
+        Function will replace dynamic variables, parsing request xml and then
+        extracting the values and replacing them in the responses accordingly
+    """
     soup_request = BeautifulSoup(xml_request, "xml")
     soup_request_mapped = BeautifulSoup(xml_request_mapped, "xml")
     response_check = False
@@ -40,21 +48,16 @@ def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_r
             try:
                 request_value = soup_request.find(srm_tag_name[i]).text
                 value_map_dic[srm_tag_value[i]] = request_value
-                print(value_map_dic)
             except AttributeError:
                 print('Tag not in request/response')
     names_mapping_srm = [[srm_tag_name[ix], value_map_dic[srm_tag_value[ix]]] for ix in range(len(srm_tag_value)) if
                  srm_tag_value[ix] in list(value_map_dic.keys())]
     try:
         for name in names_mapping_srm:
-            print(name[0])
             soup_request_mapped.find(name=name[0]).string = name[1]
         check_match = (soup_request_mapped == soup_request)
     except AttributeError:
         print('Tag not in request/response')
-    print(soup_request_mapped)
-    print(soup_request)
-    print(check_match)
     if (check_match):
         try:
             srsm_tag_value = [tag.text for tag in soup_response_mapped.findAll()]
@@ -78,6 +81,10 @@ def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_r
 
 
 def DynamicJson(json_request, json_request_mapp, json_response_mapp, json_async_response_mapp):
+    """
+        Function will replace dynamic variables, parsing request json and then
+        extracting the values and replacing them in the responses accordingly
+    """
     value_map_dic = {}
     for k, v in json_request_mapp.items():
         if '?' in v:
@@ -203,7 +210,3 @@ if __name__ == '__main__':
     </soapenv:Envelope>
     '''
     check_match, dynamic_request, dynamic_response, dynamic_async_response = Main(xml_request, xml_request_mapped, xml_response_mapped, xml_asynce_response_mapped)
-    # check_match, dynamic_request, dynamic_response, dynamic_async_response = Main(request_json, request_mapp_json, response_mapp_json)
-    # print(check_match)
-    # print(dynamic_request)
-    # print(dynamic_response)

@@ -1,6 +1,9 @@
 import xml.dom.minidom as xdm
 
 def CheckType(packet):
+    """
+        Function will determine if packet is of type xml or json
+    """
     packet_type = None
     if (isinstance(packet, dict)):
         packet_type = 'json'
