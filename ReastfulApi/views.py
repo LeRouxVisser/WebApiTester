@@ -103,17 +103,15 @@ def GetMockResponse(request):
     profile_obj.result_match = 0
     mapped_request = ""
     for pack in json_spec:
-        original_mapped_request = str(pack[0])
         if async_bool:
             check_match, dynamic_request, dynamic_response, dynamic_async_response = dm.Main(request_body, pack[0], pack[1], pack[3])
         else:
             check_match, dynamic_request, dynamic_response, dynamic_async_response = dm.Main(request_body, pack[0], pack[1])
         if mapped_request != str(request_body):
-            mapped_request = mapped_request + str(pack[0]) + ("." if (pack == json_spec[len(json_spec) -1]) else ",\n")
+            mapped_request = mapped_request + str(dynamic_request) + ("." if (pack == json_spec[len(json_spec) -1]) else ",\n")
         else:
             mapped_request = mapped_request + "."
         if (check_match):
-            mapped_request = original_mapped_request
             profile_obj.result_match = 1
             api_response = dynamic_response
             api_response_status = pack[2]

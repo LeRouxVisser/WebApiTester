@@ -13,7 +13,6 @@ class Profile(models.Model):
     async_func = models.BooleanField(default=0)
     async_result_url = models.URLField(default='https://uat.openapi.m-pesa.com/')
     async_result_time_delay = models.IntegerField(validators=[
-            MaxValueValidator(120),
             MinValueValidator(1)
         ], default=10)
     json_spec = models.TextField(default="[[{},{},200]]")

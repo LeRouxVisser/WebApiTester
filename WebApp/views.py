@@ -44,7 +44,7 @@ def home(request):
     """
         Function is used to render the home page.
     """
-    u_form = f.UserUpdateForm(instance=request.user)
+    u_form = f.UserUpdateForm()
     context = {
         'u_form': u_form
     }
