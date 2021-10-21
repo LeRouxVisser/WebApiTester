@@ -21,10 +21,13 @@ def AsyncCall(result_url, sleep_time, result_response):
     if result_response_type == "json":
         result_header = {'Content-Type': 'application/json'}
     elif result_response_type == "xml":
-        result_header = {'Content-Type': 'application/xml'}
+        result_header = None
     else:
         result_header = None
-    requests.post(url=result_url, data=result_response, headers=result_header)
+    print(result_header)
+    response = requests.post(url=result_url, data=result_response, headers=result_header, verify=False)
+    print(result_response)
+    print(response)
 
 
 def GetResponse(response, response_status, response_type,
