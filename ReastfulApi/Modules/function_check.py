@@ -14,3 +14,10 @@ def CheckType(packet):
         except xdm.xml.parsers.expat.ExpatError:
             pass
     return packet_type
+
+def is_intable(string):
+    try:
+        int(string)
+        return True
+    except ValueError:
+        return False

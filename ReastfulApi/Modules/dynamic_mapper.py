@@ -8,15 +8,17 @@ def Main(request,request_mapped=None,response_mapp=None,async_response_mapp=None
     request_type_check = fc.CheckType(request)
     if request_type_check == 'xml':
         check_match, dynamic_request, dynamic_response, dynamic_async_response = DynamicXml(request, request_mapped, response_mapp, async_response_mapp)
+        print('xml')
 
     elif request_type_check == 'json':
         check_match, dynamic_request, dynamic_response, dynamic_async_response = DynamicJson(request, request_mapped, response_mapp, async_response_mapp)
-
+        print('json')
     else:
         check_match = (request == request_mapped)
         dynamic_request = request_mapped
         dynamic_response = response_mapp
         dynamic_async_response = async_response_mapp
+        print('text')
     return check_match, dynamic_request, dynamic_response, dynamic_async_response
 
 
@@ -26,7 +28,9 @@ def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_r
         extracting the values and replacing them in the responses accordingly
     """
     soup_request = BeautifulSoup(xml_request, "xml")
+
     soup_request_mapped = BeautifulSoup(xml_request_mapped, "xml")
+    print(soup_request_mapped)
     response_check = False
     check_match = False
     value_map_dic = {}
@@ -42,22 +46,15 @@ def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_r
             soup_async_response_mapp = xml_async_response_mapp
 
     srm_tag_value = [tag.text for tag in soup_request_mapped.findAll()]
-    srm_tag_name = [tag.name for tag in soup_request_mapped.findAll()]
     for i in range(len(srm_tag_value)):
-        if ('\n' not in srm_tag_value[i]) and (' ' not in srm_tag_value[i]) and ('?' in srm_tag_value[i]):
-            try:
-                request_value = soup_request.find(srm_tag_name[i]).text
-                value_map_dic[srm_tag_value[i]] = request_value
-            except AttributeError:
-                print('Tag not in request/response')
-    names_mapping_srm = [[srm_tag_name[ix], value_map_dic[srm_tag_value[ix]]] for ix in range(len(srm_tag_value)) if
-                 srm_tag_value[ix] in list(value_map_dic.keys())]
-    try:
-        for name in names_mapping_srm:
-            soup_request_mapped.find(name=name[0]).string = name[1]
-        check_match = (soup_request_mapped == soup_request)
-    except AttributeError:
-        print('Tag not in request/response')
+        if ('\n' not in srm_tag_value[i]) and (' ' not in srm_tag_value[i]) and (srm_tag_value[i].startswith('?')
+            and fc.is_intable(srm_tag_value[i][1:len(srm_tag_value[i])])):
+            start_index_value = xml_request_mapped.find(srm_tag_value[i])
+            request_value = xml_request[start_index_value: xml_request.find('</', start_index_value)]
+            value_map_dic[srm_tag_value[i]] = request_value
+            xml_request_mapped = xml_request_mapped.replace(srm_tag_value[i] + '</', request_value + '</')
+    soup_request_mapped = BeautifulSoup(xml_request_mapped, 'xml')
+    check_match = (soup_request_mapped == soup_request)
     if (check_match):
         try:
             srsm_tag_value = [tag.text for tag in soup_response_mapped.findAll()]
