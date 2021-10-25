@@ -27,12 +27,14 @@ def DynamicXml(xml_request, xml_request_mapped, xml_response_mapped, xml_async_r
         Function will replace dynamic variables, parsing request xml and then
         extracting the values and replacing them in the responses accordingly
     """
-    soup_request = BeautifulSoup(xml_request, "xml")
 
+    xml_request = xml_request.replace('\r', '').replace('\n', '').replace('\t', '').replace(' ', '')
+    soup_request = BeautifulSoup(xml_request, "xml")
+    xml_request_mapped = xml_request_mapped.replace('\r', '').replace('\n', '').replace('\t', '').replace(' ', '')
     soup_request_mapped = BeautifulSoup(xml_request_mapped, "xml")
-    print(soup_request_mapped)
     response_check = False
     check_match = False
+
     value_map_dic = {}
     try:
         soup_response_mapped = BeautifulSoup(xml_response_mapped, "xml")
